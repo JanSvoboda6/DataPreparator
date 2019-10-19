@@ -1,3 +1,3 @@
 # DataPreparator
 
-Preparetes data which were exported from SLICER
+Prepares data which were exported from SLICER
