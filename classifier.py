@@ -1,16 +1,17 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from sklearn.metrics import jaccard_score
 from sklearn import svm
+from sklearn.metrics import jaccard_score
 from data_preparator import load_train_data, load_masks
 
 
-def train_classifier():
+def classify():
     x = load_train_data()
     y = load_masks()
     images = []
     masks = []
-    for i in range(0, x.shape[0]):
+    # conversion of 3D array to 1D list
+    for i in range(0, x.shape[0] - 1):
         images.extend(x[i].reshape(-1, 1).tolist())
         masks.extend(y[i].ravel().tolist())
 
@@ -22,34 +23,43 @@ def train_classifier():
     print('-' * 20)
     print('Predicting started')
     print('-' * 20)
-    y_prediction = clf.predict(images)
-    # acc = metrics.accuracy_score(y[0].ravel().tolist(), y_prediction)
-    np.save('PREDICTED MASK.npy', y_prediction)
+    last_image = x[-1].reshape(-1, 1).tolist()
+    prediction = clf.predict(last_image)
+    # conversion from 1D list to 2D array
+    np.asarray(prediction).reshape(256, 315)
+    np.save('predicted_mask.npy', prediction)
     print('-' * 20)
 
 
-def dice(truth, predicted):
-    intersection = np.logical_and(truth, predicted)
-    return 2. * intersection.sum() / (truth.sum() + predicted.sum())
+def dice(reference, prediction):
+    intersection = np.logical_and(reference, prediction)
+    return 2. * intersection.sum() / (reference.sum() + prediction.sum())
 
 
-def jaccard(truth, predicted):
-    return jaccard_score(truth, predicted)
+def jaccard(reference, prediction):
+    return jaccard_score(reference, prediction)
 
 
 if __name__ == '__main__':
-    train_classifier()
-    mask = np.load('PREDICTED MASK.npy')
-    truth = np.load('masks.npy').ravel()
-    print('DICE coeficient')
-    print(dice(truth, mask))
+    #classify()
+    predicted_mask = np.load('predicted_mask.npy').ravel()
+    truth_mask = np.load('masks.npy')[-1].ravel()
+    print('Dice coefficient')
+    print(dice(truth_mask, predicted_mask))
     print('-' * 20)
-    print('JACCARD coeficient')
-    print(jaccard(truth, mask))
+    print('Jaccard coefficient')
+    print(jaccard(truth_mask, predicted_mask))
     print('-' * 20)
 
-    mask = mask.reshape(256, 315)
-    plt.imshow(mask)
-    plt.show(block=False)
-    plt.pause(2)
+    predicted_mask = predicted_mask.reshape(256, 315)
+    plt.figure(1)
+    plt.title('PREDICTED')
+    plt.imshow(predicted_mask)
+
+    truth_mask = truth_mask.reshape(256, 315)
+    plt.figure(2)
+    plt.title('REFERENCE')
+    plt.imshow(truth_mask)
+
+    plt.show()
     plt.close('all')
