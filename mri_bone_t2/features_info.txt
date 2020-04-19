@@ -1,0 +1,1 @@
+[{'num_of_pixels': 80640, 'height': 256, 'width': 315}, {'num_of_pixels': 80640, 'height': 256, 'width': 315}, {'num_of_pixels': 80640, 'height': 256, 'width': 315}]

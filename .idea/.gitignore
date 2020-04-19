@@ -1,3 +1,6 @@
 *.xml
 *.iml
 *.npy
+*.joblib
+*.idea
+__pycache__

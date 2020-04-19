@@ -14,12 +14,12 @@ from features import load_features, load_features_info, load_masks
 
 matplotlib.use('Agg')
 
-TRAINING_TYPE = 'DEFAULT_CLASSIFIER'
+TRAINING_TYPE = 'DEFAULT_TRAINING'
 NUM_OF_TESTING_IMAGES = 1
-DEFAULT_GAMMA = 0.5
-DEFAULT_C = 40
-GRID_SEARCH_PARAMETERS = {'base_estimator__gamma': [0.01, 0.1, 0.5, 1, 10],
-                          'base_estimator__C': [0.01, 0.1, 1, 10, 30, 50]}
+DEFAULT_C = 30
+DEFAULT_GAMMA = 1
+GRID_SEARCH_PARAMETERS = {'base_estimator__C': [0.01, 0.1, 1, 10, 30, 50],
+                          'base_estimator__gamma': [0.01, 0.1, 0.5, 1, 10]}
 
 
 def choose_training_type():
