@@ -17,9 +17,29 @@ def to_signed(image):
 
 
 def normalize(image):
+    # This method normalizes value of each pixel, converts image to unsigned int
+    # to get only 256 possible pixel values and then normalizes values to range between 0-1
+    image = image.astype(np.float64)
+    image /= np.max(image)
+    image *= 255
+
+    image = image.astype(np.uint8)
+
     image = image.astype(np.float32)
     image /= 255
     return image
+
+
+def equalize_histogram(image):
+    reshaped_image = image.ravel()
+    histogram, bins = np.histogram(reshaped_image, bins=10, density=True)
+    cum_sum = histogram.cumsum()
+    # Normalize cumulative sum, value at last index is maximum
+    cum_sum /= cum_sum[-1]
+    equalized_image = np.interp(reshaped_image, bins[:-1], cum_sum)
+    equalized_image = equalized_image / np.max(equalized_image)
+    unique, counts = np.unique(equalized_image, return_counts=True)
+    return equalized_image.reshape(image.shape)
 
 
 def count_gradient(image):
@@ -113,6 +133,7 @@ def prepare_features():
         image = pydicom.dcmread(os.path.join(data_path, image_path)).pixel_array
         image = to_signed(image)
         image = normalize(image)
+        image = equalize_histogram(image)
         featureDictionary = getFeatureDictionary(image)
         # For each pixel
         for i in range(image.size):

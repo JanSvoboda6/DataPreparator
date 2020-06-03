@@ -14,12 +14,12 @@ from sklearn.ensemble import BaggingClassifier
 from features import load_features, load_features_info, load_masks
 from ing_theme_matplotlib import mpl_style
 
-TRAINING_TYPE = 'GRID_SEARCH'
+TRAINING_TYPE = 'DEFAULT_TRAINING'
 NUM_OF_VALIDATION_IMAGES = 1
 DEFAULT_C = 40
-DEFAULT_GAMMA = 0.5
-GRID_SEARCH_PARAMETERS = {'base_estimator__C': [1, 10, 25, 50, 100],
-                          'base_estimator__gamma': [0.1, 1, 5, 10, 50]}
+DEFAULT_GAMMA = 1
+GRID_SEARCH_PARAMETERS = {'base_estimator__C': [1, 10, 20, 30, 40, 50, 75, 100],
+                          'base_estimator__gamma': [0.1, 0.5, 1, 2.5, 5, 10]}
 
 
 def choose_training_type():
